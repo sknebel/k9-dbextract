@@ -1,3 +1,6 @@
+#Don't accidentially commit k9 database files!
+preferences_storage
+# Github Python-default below
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
