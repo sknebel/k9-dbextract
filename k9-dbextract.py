@@ -3,12 +3,16 @@ import base64
 import sqlite3
 
 
-conn = sqlite3.connect('preferences_storage')
+def keyLookup(cursor, key):
+    return cur.execute("SELECT value FROM preferences_storage where primkey=:key", {"key": key}).fetchone()[0]
+
+conn = sqlite3.connect("preferences_storage")
 cur = conn.cursor()
 
-a = cur.execute("SELECT value FROM preferences_storage WHERE primkey = 'accountUuids'")
-for accID in a.fetchall()[0][0].split(","):
-    b = cur.execute("SELECT value FROM preferences_storage WHERE primkey = '" + accID + ".transportUri'")
-    print(base64.b64decode(b.fetchall()[0][0]))
+accountList = keyLookup(cur, "accountUuids").split(",")
+for accID in accountList:
+    name = keyLookup(cur, accID + ".description")
+    b64 = keyLookup(cur, accID + ".transportUri")
+    print(name,":", base64.b64decode(b64).decode("utf-8"))
     
-
+cur.close()
